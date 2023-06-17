@@ -125,7 +125,7 @@ class UserService {
 
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
-        final List<String> apprenticeNames = data.map((item) => item['name'] as String).toList();
+        final List<String> apprenticeNames = data.map((item) => item['id'] as String).toList();
 
         return apprenticeNames;
       } else {
