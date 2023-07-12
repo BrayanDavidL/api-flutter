@@ -1,16 +1,12 @@
-
-
-// login
 import 'dart:convert';
 import 'dart:io';
-import 'package:blogapp/constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../constant.dart';
 import '../models/api_response.dart';
-
 import 'package:http/http.dart' as http;
-
 import '../models/user.dart';
 
+// login
 Future<ApiResponse> login (String email, String password) async {
   ApiResponse apiResponse = ApiResponse();
   try{
@@ -50,7 +46,7 @@ Future<ApiResponse> getUserDetail() async {
   try {
     String token = await getToken();
     final response = await http.get(
-      Uri.parse(userURL),
+      Uri.parse(apprenticesURL),
       headers: {
         'Accept': 'application/json',
         'Authorization': 'Bearer $token'
@@ -80,7 +76,7 @@ Future<ApiResponse> updateUser(String name, String? image) async {
   try {
     String token = await getToken();
     final response = await http.put(
-      Uri.parse(userURL),
+      Uri.parse(apprenticesURL),
       headers: {
         'Accept': 'application/json',
         'Authorization': 'Bearer $token'
@@ -111,32 +107,6 @@ Future<ApiResponse> updateUser(String name, String? image) async {
   }
   return apiResponse;
 }
-//Aprendices
-class UserService {
-  static Future<List<String>> fetchApprentices() async {
-    try {
-      String token = await getToken();
-      final response = await http.get(
-          Uri.parse('http://127.0.0.1:8000/api/SIGAC/apprentice'),
-          headers: {
-            'Accept': 'application/json',
-            'Authorization': 'Bearer $token'
-          });
-
-      if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
-        final List<String> apprenticeNames = data.map((item) => item['id'] as String).toList();
-
-        return apprenticeNames;
-      } else {
-        throw Exception('Error al obtener los aprendices');
-      }
-    } catch (error) {
-      throw Exception('Error de conexión: $error');
-    }
-  }
-}
-
 
 // get token
 Future<String> getToken() async {
