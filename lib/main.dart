@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'screens/loading.dart';
 
 void main() {
@@ -11,7 +10,14 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Loading(),
+      title: 'Bienestar',
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+        shadowColor: Colors.green,
+      ),
+      home: Scaffold(
+        body: Loading(),
+      ),
     );
   }
 }

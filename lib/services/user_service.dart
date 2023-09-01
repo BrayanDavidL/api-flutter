@@ -1,24 +1,28 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+
 import '../constant.dart';
 import '../models/api_response.dart';
-import 'package:http/http.dart' as http;
 import '../models/user.dart';
 
-// login
-Future<ApiResponse> login (String email, String password) async {
+Future<ApiResponse> login(String email, String password) async {
   ApiResponse apiResponse = ApiResponse();
-  try{
+  try {
     final response = await http.post(
       Uri.parse(loginURL),
       headers: {'Accept': 'application/json'},
-      body: {'email': email, 'password': password}
+      body: {'email': email, 'password': password},
     );
 
-    switch(response.statusCode){
+    switch (response.statusCode) {
       case 200:
-        apiResponse.data = User.fromJson(jsonDecode(response.body));
+        User user = User.fromJson(jsonDecode(response.body));
+        SharedPreferences pref = await SharedPreferences.getInstance();
+        await pref.setString('token', user.token ?? '');
+        await pref.setString('email', email);
+        await pref.setString('password', password);
+        apiResponse.data = user;
         break;
       case 422:
         final errors = jsonDecode(response.body)['errors'];
@@ -31,47 +35,52 @@ Future<ApiResponse> login (String email, String password) async {
         apiResponse.error = somethingWentWrong;
         break;
     }
-  }
-  catch(e){
+  } catch (e) {
     apiResponse.error = serverError;
   }
 
   return apiResponse;
 }
 
-
-// User
 Future<ApiResponse> getUserDetail() async {
   ApiResponse apiResponse = ApiResponse();
   try {
+    SharedPreferences pref = await SharedPreferences.getInstance();
     String token = await getToken();
+    String email = pref.getString('email') ?? '';
+    String password = pref.getString('password') ?? '';
+
     final response = await http.get(
       Uri.parse(apprenticesURL),
       headers: {
         'Accept': 'application/json',
-        'Authorization': 'Bearer $token'
-      });
+        'Authorization': 'Bearer $token',
+      },
+    );
 
-    switch(response.statusCode){
+    switch (response.statusCode) {
       case 200:
         apiResponse.data = User.fromJson(jsonDecode(response.body));
         break;
       case 401:
-        apiResponse.error = unauthorized;
+        ApiResponse loginResponse = await login(email, password);
+        if (loginResponse.error == null) {
+          apiResponse = await getUserDetail();
+        } else {
+          apiResponse.error = unauthorized;
+        }
         break;
       default:
         apiResponse.error = somethingWentWrong;
         break;
     }
-  } 
-  catch(e) {
+  } catch (e) {
     apiResponse.error = serverError;
   }
   return apiResponse;
 }
 
-// Update user
-Future<ApiResponse> updateUser(String name, String? image) async {
+Future<ApiResponse> updateUser(String name) async {
   ApiResponse apiResponse = ApiResponse();
   try {
     String token = await getToken();
@@ -79,55 +88,62 @@ Future<ApiResponse> updateUser(String name, String? image) async {
       Uri.parse(apprenticesURL),
       headers: {
         'Accept': 'application/json',
-        'Authorization': 'Bearer $token'
-      }, 
-      body: image == null ? {
-        'name': name,
-      } : {
-        'name': name,
-        'image': image
-      });
-      // user can update his/her name or name and image
+        'Authorization': 'Bearer $token',
+      },
+      body: {'name': name},
+    );
 
-    switch(response.statusCode) {
+    switch (response.statusCode) {
       case 200:
-        apiResponse.data =jsonDecode(response.body)['message'];
+        apiResponse.data = jsonDecode(response.body)['message'];
         break;
       case 401:
-        apiResponse.error = unauthorized;
+        String email = await getEmail();
+        String password = await getPassword();
+        ApiResponse loginResponse = await login(email, password);
+        if (loginResponse.error == null) {
+          apiResponse = await updateUser(name);
+        } else {
+          apiResponse.error = unauthorized;
+        }
         break;
       default:
         print(response.body);
         apiResponse.error = somethingWentWrong;
         break;
     }
-  }
-  catch (e) {
+  } catch (e) {
     apiResponse.error = serverError;
   }
   return apiResponse;
 }
 
-// get token
+
+// Obtiene el token almacenado
 Future<String> getToken() async {
   SharedPreferences pref = await SharedPreferences.getInstance();
   return pref.getString('token') ?? '';
 }
 
-// get user id
+// Obtiene el ID de usuario almacenado
 Future<int> getUserId() async {
   SharedPreferences pref = await SharedPreferences.getInstance();
   return pref.getInt('userId') ?? 0;
 }
 
-
+// Cierra la sesión y elimina el token
 Future<bool> logout() async {
   SharedPreferences pref = await SharedPreferences.getInstance();
   return await pref.remove('token');
 }
+// Obtiene el correo almacenado
+Future<String> getEmail() async {
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  return pref.getString('email') ?? '';
+}
 
-// Get base64 encoded image
-String? getStringImage(File? file) {
-  if (file == null) return null ;
-  return base64Encode(file.readAsBytesSync());
+// Obtiene la contraseña almacenada
+Future<String> getPassword() async {
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  return pref.getString('password') ?? '';
 }

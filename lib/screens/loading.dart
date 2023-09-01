@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-
 import '../constant.dart';
 import '../models/api_response.dart';
 import '../services/user_service.dart';
-import 'home.dart';
 import 'login.dart';
+import 'home.dart';
 
 class Loading extends StatefulWidget {
   @override
@@ -13,21 +12,28 @@ class Loading extends StatefulWidget {
 
 class _LoadingState extends State<Loading> {
   final GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey<ScaffoldMessengerState>();
+  String _token = '';
 
   void _loadUserInfo() async {
-    String token = await getToken();
-    if (token == '') {
+    _token = await getToken();
+    if (_token.isEmpty) {
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => Login()), (route) => false);
+        MaterialPageRoute(builder: (context) => LoginScreen()),
+            (route) => false,
+      );
     } else {
       ApiResponse response = await getUserDetail();
       BuildContext scaffoldContext = _scaffoldKey.currentContext!;
       if (response.error == null) {
         Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => Home()), (route) => false);
+          MaterialPageRoute(builder: (context) => Home()),
+              (route) => false,
+        );
       } else if (response.error == unauthorized) {
         Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => Login()), (route) => false);
+          MaterialPageRoute(builder: (context) => LoginScreen()),
+              (route) => false,
+        );
       } else {
         ScaffoldMessenger.of(scaffoldContext).showSnackBar(SnackBar(
           content: Text('${response.error}'),
@@ -38,8 +44,8 @@ class _LoadingState extends State<Loading> {
 
   @override
   void initState() {
-    _loadUserInfo();
     super.initState();
+    _loadUserInfo();
   }
 
   @override

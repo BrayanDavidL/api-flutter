@@ -1,10 +1,13 @@
 // ----- STRINGS ------
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-const baseURL = 'http://192.168.18.114:8000/api';
+const baseURL = 'http://10.192.144.138:8000/api';
 const loginURL = baseURL + '/SIGAC/login';
 const logoutURL = baseURL + '/SIGAC/logout';
 const apprenticesURL = baseURL + '/SIGAC/apprentice';
+const assistenceURL = baseURL + '/SIGAC/assistence';
 
 // ----- Errors -----
 const serverError = 'Server error';
@@ -25,7 +28,7 @@ InputDecoration kInputDecoration(String label) {
 //Header Login
 Container HeaderLogin (){
   return Container(
-      color: Colors.cyan,
+      color: Colors.green,
       height: 300,
       decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(10),
@@ -36,26 +39,49 @@ Container HeaderLogin (){
 // button
 Container kTextButton(String label, Function onPressed) {
   return Container(
-    width: 200,
+    width: 500,
     child: TextButton(
       onPressed: () => onPressed(),
       style: ButtonStyle(
-        backgroundColor: MaterialStateColor.resolveWith((states) => const Color(0xff69e2ff)),
-        side: MaterialStateBorderSide.resolveWith((states) => BorderSide(width: 3.0, color: const Color(0xff000000))),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(50.0),
+            borderRadius: BorderRadius.circular(30),
           ),
         ),
-        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.symmetric(vertical: 25)),
+        backgroundColor: MaterialStateColor.resolveWith((states) => Colors.green),
+        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+          EdgeInsets.fromLTRB(20, 20, 20, 20),
+        ),
       ),
       child: Text(
         label,
-        style: TextStyle(fontSize: 25,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 20,
+          color: Colors.black,
           fontWeight: FontWeight.bold,
-          color: Colors.black,),
+        ),
       ),
     ),
+  );
+}
+//Appbar
+AppBar buildAppBar() {
+  return AppBar(
+    backgroundColor: Colors.white,
+    title: SizedBox(
+      child: Image.asset("assets/bienestar.png", fit: BoxFit.contain),
+    ),
+    actions: [
+      IconButton(
+        icon: Icon(Icons.notifications, color: Colors.green,),
+        onPressed: () {
+          // Aquí puedes abrir una nueva pantalla o mostrar las notificaciones
+          // Puedes implementar la lógica para mostrar las notificaciones aquí
+          // o navegar a una nueva pantalla donde se muestren las notificaciones.
+        },
+      ),
+    ],
   );
 }
 
@@ -67,7 +93,7 @@ Row kLoginRegisterHint(String text, String label, Function onTap) {
     children: [
       Text(text),
       GestureDetector(
-        child: Text(label, style:TextStyle(color: Colors.blue)),
+        child: Text(label, style:TextStyle(color: Colors.green)),
         onTap: () => onTap()
       )
     ],

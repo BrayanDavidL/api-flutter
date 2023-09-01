@@ -1,27 +1,31 @@
 class User {
-  int? id;
-  String? name;
-  String? image;
-  String? email;
-  String? token;
+  final int id;
+  final String nickname;
+  final String email;
+  final String token;
 
   User({
-    this.id,
-    this.name,
-    this.image,
-    this.email,
-    this.token
+    required this.id,
+    required this.nickname,
+    required this.email,
+    required this.token,
   });
 
-
-  // function to convert json data to user model
-  factory User.fromJson(Map<String, dynamic> json){
+  factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: json['user']['id'],
-      name: json['user']['name'],
-      image: json['user']['image'],
-      email: json['user']['email'],
-      token: json['token']
+      id: json['id'] ?? 0,
+      nickname: json['nickname'] ?? '',
+      email: json['email'] ?? '',
+      token: json['token'] ?? '',
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'nickname': nickname,
+      'email': email,
+      'token': token,
+    };
   }
 }
