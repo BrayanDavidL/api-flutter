@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-const baseURL = 'http://10.192.144.138:8000/api';
+const baseURL = 'http://192.168.18.2:8000/api';
 const loginURL = baseURL + '/SIGAC/login';
 const logoutURL = baseURL + '/SIGAC/logout';
 const apprenticesURL = baseURL + '/SIGAC/apprentice';
