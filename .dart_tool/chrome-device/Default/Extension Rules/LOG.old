@@ -1,3 +1,4 @@
-2023/08/16-09:52:14.928 345c Reusing MANIFEST C:\Users\braya\AppData\Local\Temp\flutter_tools.140ec28c\flutter_tools_chrome_device.7581ee30\Default\Extension Rules/MANIFEST-000001
-2023/08/16-09:52:14.929 345c Recovering log #3
-2023/08/16-09:52:14.929 345c Reusing old log C:\Users\braya\AppData\Local\Temp\flutter_tools.140ec28c\flutter_tools_chrome_device.7581ee30\Default\Extension Rules/000003.log 
+2023/12/11-18:49:13.108 3850 Log #3: 0 ops saved to Table #4 OK
+2023/12/11-18:49:13.111 3850 Archiving C:\Users\braya\AppData\Local\Temp\flutter_tools.8c9b63ae\flutter_tools_chrome_device.1f377da9\Default\Extension Rules/000003.log: OK
+2023/12/11-18:49:13.116 3850 Archiving C:\Users\braya\AppData\Local\Temp\flutter_tools.8c9b63ae\flutter_tools_chrome_device.1f377da9\Default\Extension Rules/MANIFEST-000001: OK
+2023/12/11-18:49:13.127 3850 **** Repaired leveldb C:\Users\braya\AppData\Local\Temp\flutter_tools.8c9b63ae\flutter_tools_chrome_device.1f377da9\Default\Extension Rules; recovered 0 files; 0 bytes. Some data may have been lost. ****

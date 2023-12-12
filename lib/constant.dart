@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-const baseURL = 'http://192.168.18.2:8000/api';
-const loginURL = baseURL + '/SIGAC/login';
-const logoutURL = baseURL + '/SIGAC/logout';
-const apprenticesURL = baseURL + '/SIGAC/apprentice';
-const assistenceURL = baseURL + '/SIGAC/assistence';
+const baseURL = 'http://192.168.18.2:8081/api';
+const loginURL = baseURL + '/Api/login';
+const logoutURL = baseURL + '/Api/logout';
+const apprenticesURL = baseURL + '/Api/transportation_asistance';
+const assistenceURL = baseURL + '/Api/saveAttendance';
 
 // ----- Errors -----
 const serverError = 'Server error';
